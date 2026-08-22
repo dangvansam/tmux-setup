@@ -49,7 +49,7 @@ Prefix is the default `Ctrl+b`.
 
 ## Notes
 
-- Continuum auto-saves every 15 minutes; saves live in `~/.local/share/tmux/resurrect/`
+- Continuum auto-saves every 5 minutes; saves live in `~/.local/share/tmux/resurrect/`
 - Resurrect restores layout, working directories and pane contents; `@resurrect-processes` auto-restarts `ssh`, `htop`, `btop`, any `nvidia-smi` variant (full original command), and Claude Code panes via `claude --continue` (resumes the latest conversation in that pane's working directory) — extend the list in `tmux.conf` for other programs
 - Without xclip/xsel, clipboard over SSH still works via OSC 52 if the terminal supports it (iTerm2, kitty, alacritty, wezterm)
 - Optional systemd alternative to the cron entry: `sudo loginctl enable-linger $USER`, then continuum's `@continuum-boot 'on'` manages `~/.config/systemd/user/tmux.service`
