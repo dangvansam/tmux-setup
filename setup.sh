@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TPM_DIR="$HOME/.tmux/plugins/tpm"
 TMUX_CONF="$HOME/.tmux.conf"
-BOOT_CRON_ENTRY='@reboot /usr/bin/tmux new-session -d -s main 2>/dev/null'
+BOOT_CRON_ENTRY='@reboot /bin/bash -lc "/usr/bin/tmux new-session -d -s main" 2>/dev/null'
 
 log() {
   printf '\033[1;32m[tmux-setup]\033[0m %s\n' "$1"
@@ -67,11 +67,11 @@ install_plugins() {
 }
 
 setup_boot_restore() {
-  if crontab -l 2>/dev/null | grep -Fq '@reboot /usr/bin/tmux new-session'; then
+  if crontab -l 2>/dev/null | grep -Fq "$BOOT_CRON_ENTRY"; then
     log "reboot cron entry already present"
     return
   fi
-  (crontab -l 2>/dev/null; echo "$BOOT_CRON_ENTRY") | crontab -
+  { crontab -l 2>/dev/null | grep -v 'tmux new-session' || true; echo "$BOOT_CRON_ENTRY"; } | crontab -
   log "reboot cron entry added: tmux auto-starts and continuum restores sessions"
 }
 
