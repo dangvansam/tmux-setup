@@ -51,6 +51,12 @@ install_config() {
   log "tmux.conf installed to $TMUX_CONF"
 }
 
+install_scripts() {
+  mkdir -p "$HOME/.tmux/scripts"
+  install -m 0755 "$REPO_DIR"/scripts/*.sh "$HOME/.tmux/scripts/"
+  log "helper scripts installed to ~/.tmux/scripts"
+}
+
 install_tpm() {
   if [ -d "$TPM_DIR" ]; then
     log "tpm already installed, updating"
@@ -87,6 +93,7 @@ main() {
   install_clipboard_tool
   backup_existing_config
   install_config
+  install_scripts
   install_tpm
   install_plugins
   setup_boot_restore

@@ -50,6 +50,7 @@ Prefix is the default `Ctrl+b`.
 ## Notes
 
 - Continuum auto-saves every 5 minutes; saves live in `~/.local/share/tmux/resurrect/`
-- Resurrect restores layout, working directories and pane contents; `@resurrect-processes` auto-restarts `ssh`, `htop`, `btop`, any `nvidia-smi` variant (full original command), and Claude Code panes via `claude --continue` (resumes the latest conversation in that pane's working directory) — extend the list in `tmux.conf` for other programs
+- Resurrect restores layout, working directories and pane contents; `@resurrect-processes` auto-restarts `ssh`, `htop`, `btop`, any `nvidia-smi` variant (full original command), and Claude Code — extend the list in `tmux.conf` for other programs
+- Claude Code restore is per pane: on every save, `scripts/claude-save-sessions.sh` (resurrect `post-save-all` hook) records each pane's session ID from `~/.claude/sessions/<pid>.json` into `~/.local/share/tmux/resurrect/claude-sessions.tsv`; on restore, `scripts/claude-resume.sh` runs `claude --resume <id>` for that exact pane, so split panes in the same directory no longer collapse onto one conversation. Falls back to `claude --continue` when no ID was recorded. Check what a pane would run with `TMUX_PANE=%3 ~/.tmux/scripts/claude-resume.sh --print`
 - Without xclip/xsel, clipboard over SSH still works via OSC 52 if the terminal supports it (iTerm2, kitty, alacritty, wezterm)
 - Optional systemd alternative to the cron entry: `sudo loginctl enable-linger $USER`, then continuum's `@continuum-boot 'on'` manages `~/.config/systemd/user/tmux.service`
