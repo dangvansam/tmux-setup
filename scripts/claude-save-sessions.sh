@@ -8,6 +8,10 @@ SESSIONS_DIR="$HOME/.claude/sessions"
 read_session_field() {
   local file="$1"
   local field="$2"
+  if command -v jq >/dev/null 2>&1; then
+    jq -r --arg f "$field" '.[$f] // empty' "$file" 2>/dev/null
+    return
+  fi
   if command -v python3 >/dev/null 2>&1; then
     python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get(sys.argv[2], ""))' "$file" "$field" 2>/dev/null
     return
